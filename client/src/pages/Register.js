@@ -18,7 +18,7 @@ const Register = () => {
             const res=await axios.post("/api/v1/user/register",{name,email,password});
             if(res.data.success){
                 message.success("registered successfull")
-                navigate("/")
+                navigate("/login")
             }
             else{
                 message.error(res.data.message)

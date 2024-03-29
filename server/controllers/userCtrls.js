@@ -1,9 +1,41 @@
 const userModel = require("../models/useModel");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-const loginController = () => {};
+const loginController = async (req, res) => {
+  try {
+    const user = await userModel.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(500).send({
+        message: "User Not Found",
+        success: false,
+      });
+    }
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    if (!isMatch) {
+      return res.status(500).send({
+        message: "Invalid password or Email",
+        success: false,
+      });
+    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    res.status(200).send({
+      message: "login success",
+      success: true,
+      token: token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `Eroor in login CTRL ${error.message}`,
+    });
+  }
+};
 
-const registerController = async(req, res) => {
+const registerController = async (req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (existingUser) {
@@ -31,4 +63,32 @@ const registerController = async(req, res) => {
   }
 };
 
-module.exports = { loginController, registerController };
+const authController = async(req,res) => {
+  try {
+    const user = await userModel.findOne({ _id: req.body.userId });
+    //console.log("userctrl"+user);
+    if (!user) {
+      return res.status(200).send({
+        message: "user not found",
+        success: false,
+      });
+    } else {
+      res.status(200).send({
+        success: true,
+        data: {
+          name: user.name,
+          email: user.email,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "auth error",
+      error
+    });
+  }
+};
+
+module.exports = { loginController, registerController, authController };

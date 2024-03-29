@@ -18,7 +18,7 @@ app.use(morgan("dev"))
 connectDB()
 
 //rouytes .
-app.use("/api/v1/user", require("./routes/userRoute"));
+app.use("/api/v1/user/", require("./routes/userRoute"));
 
 
 const port=process.env.PORT || 8000
