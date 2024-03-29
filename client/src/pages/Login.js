@@ -3,8 +3,11 @@ import "../styles/RegisterStyles.css";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { showLoading,hideLoading} from '../redux/alertSlice'
 
 const Login = () => {
+  const dispatch=useDispatch();
   const navigate = useNavigate();
   const [email, SetEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,14 +15,17 @@ const Login = () => {
   const submit = async (e) => {
     e.preventDefault();
     try {
+      dispatch(showLoading())
       const res = await axios.post("/api/v1/user/login", { email, password });
+      dispatch(hideLoading())
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
         message.success("Login successfull");
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
+      //console.log(error);
+      dispatch(hideLoading())
       message.error("something went wrong");
     }
   };
