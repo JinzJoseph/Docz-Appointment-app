@@ -66,6 +66,7 @@ const registerController = async (req, res) => {
 const authController = async(req,res) => {
   try {
     const user = await userModel.findOne({ _id: req.body.userId });
+    user.password=undefined;
     //console.log("userctrl"+user);
     if (!user) {
       return res.status(200).send({
