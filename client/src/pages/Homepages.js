@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import axios from "axios";
+import Layout from "../Component/Layout";
 
 const Homepages = () => {
  
@@ -28,7 +29,12 @@ const Homepages = () => {
   useEffect(() => {
     getUserData();
   }, []);
-  return <div>Homepages</div>;
+  return <div>
+    <Layout>
+   <h1>Homepages </h1> 
+    </Layout>
+    
+    </div>;
 };
 
 export default Homepages;
