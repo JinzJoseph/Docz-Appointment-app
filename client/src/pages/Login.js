@@ -32,8 +32,8 @@ const Login = () => {
     }
   };
   return (
-    <div className="form-container ">
-      <Form layout="vertical" className="register-form card p-2 m-5">
+    <div className="form-container">
+      <Form layout="vertical" className="register-form card p-2 m-5 border">
         <h3 className="text-center">Login From</h3>
 
         <Form.Item label="Email" name="email">

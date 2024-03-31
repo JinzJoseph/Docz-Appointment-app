@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/layoutStyle.css";
 import { adminMenu, userMenu } from "./../Data/data";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link,  useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Badge, message } from "antd";
 const Layout = ({ children }) => {
@@ -14,6 +14,10 @@ const Layout = ({ children }) => {
     navigate("/login");
   };
   const SidebarMenu = user?.isAdmin ? adminMenu : userMenu;
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate('/login');
+}
   return (
     <div className="main">
       <div className="layout">
@@ -35,14 +39,16 @@ const Layout = ({ children }) => {
             })}
             <div className={`menu-item `} onClick={handleLogout}>
               <i className="fa-solid fa-right-from-bracket"></i>
-              <Link to="/login">Logout</Link>
+              <Link  onClick={logout}>Logout</Link>
             </div>
           </div>
         </div>
         <div className="content">
           <div className="header-content">
-            <i class="fa-solid fa-bell"></i>
-            <Link to="/notification">{user?.name}</Link>
+            <Badge count={user && user.notification.length}>
+              <i class="fa-solid fa-bell" onClick={()=>navigate("/get-notification")}></i>
+            </Badge>
+            <Link to="/profile">{user?.name}</Link>
           </div>
           <div className="body">{children}</div>
         </div>

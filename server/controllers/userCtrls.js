@@ -1,4 +1,5 @@
 const userModel = require("../models/useModel");
+const doctorModel = require("../models/doctorModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -63,10 +64,10 @@ const registerController = async (req, res) => {
   }
 };
 
-const authController = async(req,res) => {
+const authController = async (req, res) => {
   try {
     const user = await userModel.findOne({ _id: req.body.userId });
-    user.password=undefined;
+    user.password = undefined;
     //console.log("userctrl"+user);
     if (!user) {
       return res.status(200).send({
@@ -76,7 +77,7 @@ const authController = async(req,res) => {
     } else {
       res.status(200).send({
         success: true,
-        data: user
+        data: user,
       });
     }
   } catch (error) {
@@ -84,9 +85,95 @@ const authController = async(req,res) => {
     res.status(500).send({
       success: false,
       message: "auth error",
-      error
+      error,
+    });
+  }
+};
+const applyDoctorController = async (req, res) => {
+  try {
+    if (!req.body.phone) {
+      return res.status(400).send({
+        success: false,
+        message: "Phone number is required sadssd.",
+      });
+    }
+    const newDoctor = await doctorModel({ ...req.body, status: "pending" });
+    await newDoctor.save();
+    const adminUser = await userModel.findOne({ isAdmin: true });
+    const notification = adminUser.notification;
+    notification.push({
+      type: "apply-doctor-request",
+      message: `${newDoctor.firstName} ${newDoctor.lastName} has applied for Doctor account`,
+      date: {
+        doctorId: newDoctor._id,
+        name: newDoctor.firstName + " " + newDoctor.lastName,
+        onClickPath: "/admin/doctors",
+      },
+    });
+    await userModel.findByIdAndUpdate(adminUser._id, { notification });
+    res.status(201).send({
+      success: true,
+      message: "doctor account applied successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+      message: "Error While Applying For Doctor",
+    });
+  }
+};
+const getAllNotificationController = async (req, res) => {
+  try {
+    const user = await userModel.findOne({ _id: req.body.userId });
+    const seennotification = user.seennotification;
+    const notification = user.notification;
+    seennotification.push(...notification);
+    user.notification = [];
+    user.seennotification = notification;
+    const updatedUser = await user.save();
+    res.status(200).send({
+      success: true,
+      message: "all notification marked as read",
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+      message: "error while get notification",
+    });
+  }
+};
+const deleteAllNotificationController = async (req, res) => {
+  try {
+    const user = await userModel.findOne({ _id: req.body.userId });
+    user.notification = [];
+    user.seennotification = [];
+    const updatedUser = await user.save();
+    updatedUser.password = undefined;
+    res.status(200).send({
+      success: true,
+      message: "all notification deleted",
+      date: updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+      message: "error while get deleting notification",
     });
   }
 };
 
-module.exports = { loginController, registerController, authController };
+module.exports = {
+  loginController,
+  registerController,
+  authController,
+  applyDoctorController,
+  getAllNotificationController,
+  deleteAllNotificationController,
+};
