@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../Component/Layout";
-import { Table } from "antd";
+import { Table, message } from "antd";
 import axios from "axios";
 function DoctorList() {
   const [doctors, setDoctors] = useState([]);
   const getUsers = async () => {
     try {
       const res = await axios.post(
-        "/api/v1/admin/getdoctors",{},
+        "/api/v1/admin/getdoctors",
+        {},
 
         {
           headers: {
-            Authorization:`Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -22,26 +23,62 @@ function DoctorList() {
       console.log(error);
     }
   };
+  const handleAccountStatus = async (record, status) => {
+    try {
+      const res = await axios.post(
+        "/api/v1/admin/doctor-change-status",
+        {
+          doctorId: record._id,
+          // userId: record.user.id,
+          status: status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        window.location.reload();
+        message.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const columns = [
     {
-      title: "Name",
-      dataIndex: "firstName",
+      title: "firstName",
+      dataIndex: "name",
+      render: (text, record) => (
+        <span>
+          {record.firstName} {record.lastName}
+        </span>
+      ),
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: "Status",
+      dataIndex: "status",
     },
     {
-      title: "Doctor",
-      dataIndex: "isDoctor",
-      render: (text, record) => <span>{record.isDoctor ? "Yes" : "No"}</span>,
+      title: "phone",
+      dataIndex: "phone",
     },
     {
       title: "Actions",
       dataIndex: "actions",
       render: (text, record) => (
         <div className="d-flex">
-          <button className="btn btn-danger">Block</button>
+          {record.status === "pending" ? (
+            <button
+              className="btn btn-success"
+              onClick={()=>handleAccountStatus(record,"approved")}
+            >
+              Approve
+            </button>
+          ) : (
+            <button className="btn btn-danger">Reject</button>
+          )}
         </div>
       ),
     },

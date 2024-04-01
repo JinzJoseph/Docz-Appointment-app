@@ -9,7 +9,7 @@ const ApplyDoctor = () => {
   const [firstName, SetName] = useState("");
   const [phone, SetPhone] = useState("");
   const [email, SetEmail] = useState("");
-  const [web, SetWeb] = useState("");
+  const [website, SetWebsite] = useState("");
   const [address, SetAddress] = useState("");
   const [specialization, SetSpecialization] = useState();
   const [experience, SetExperience] = useState("");
@@ -28,7 +28,7 @@ const ApplyDoctor = () => {
       email,
       phone,
       address,
-      web,
+      website,
       specialization,
       experience,
       feesPerCunsaltation,
@@ -44,15 +44,13 @@ const ApplyDoctor = () => {
           lastName,
           phone,
           email,
-          web,
+          website,
           address,
           specialization,
           experience,
           feesPerCunsaltation,
           timings,
           userId: user._id,
-
-
         },
         {
           headers: {
@@ -138,17 +136,12 @@ const ApplyDoctor = () => {
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
-            <Form.Item
-              label="Website"
-              name="website"
-              value={web}
-              onChange={(e) => SetWeb(e.target.value)}
-            >
+            <Form.Item label="website" name="website">
               <Input
                 type="text"
                 placeholder="your website"
-                value={web}
-                onChange={(e) => SetWeb(e.target.value)}
+                value={website}
+                onChange={(e) => SetWebsite(e.target.value)}
               />
             </Form.Item>
           </Col>

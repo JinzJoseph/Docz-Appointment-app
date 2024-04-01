@@ -67,7 +67,7 @@ const registerController = async (req, res) => {
 const authController = async (req, res) => {
   try {
     const user = await userModel.findOne({ _id: req.body.userId });
-    user.password = undefined;
+    //user.password =null;
     //console.log("userctrl"+user);
     if (!user) {
       return res.status(200).send({
@@ -168,6 +168,23 @@ const deleteAllNotificationController = async (req, res) => {
     });
   }
 };
+const getDoctorList = async (req, res) => {
+  try {
+    const doctor = await doctorModel.find({ status:"approved" });
+    res.status(200).send({
+      message: "succesfully fetched Doctor List",
+      success: true,
+      data: doctor,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "failed to fetch doctor list",
+      success: false,
+      error,
+    });
+  }
+};
 
 module.exports = {
   loginController,
@@ -176,4 +193,5 @@ module.exports = {
   applyDoctorController,
   getAllNotificationController,
   deleteAllNotificationController,
+  getDoctorList,
 };

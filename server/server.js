@@ -20,6 +20,7 @@ connectDB()
 //rouytes .
 app.use("/api/v1/user/", require("./routes/userRoute"));
 app.use("/api/v1/admin/", require("./routes/adminRoute"));
+app.use("/api/v1/doctor/",require("./routes/doctorRoute"))
 
 const port=process.env.PORT || 8000
 app.listen(port,()=>{
