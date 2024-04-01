@@ -40,9 +40,9 @@ const getDoctorUpdateContoller = async (req, res) => {
 };
 const getDoctorByIdController = async (req, res) => {
   try {
-    console.log(req.body.doctorId); // Log the doctorId received from the frontend
+    // console.log(req.body.doctorId); // Log the doctorId received from the frontend
     const singleDoctor = await doctorModel.findOne({
-      _id: req.body.doctorId // Change req.body.id to req.body.doctorId
+      _id: req?.body?.doctorId // Change req.body.id to req.body.doctorId
     });
     res.status(200).send({
       success: true,

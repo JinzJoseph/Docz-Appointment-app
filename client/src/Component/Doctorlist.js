@@ -3,14 +3,14 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 const Doctorlist = ({doctor}) => {
   const navigate=useNavigate()
-  console.log("docgtor list"+doctor._id)
+  // console.log("docgtor list"+doctor?._id)
   return (
     <>
-   <Link to={`/doctor/bookAppointment?id=${doctor._id}`}>
+   {/* <Link to={`/doctor/bookAppointment?id=${doctor?._id}`}> */}
     <div
     className="card m-2"
     style={{ cursor: "pointer" }}
-    // onClick={() => navigate(`/doctor/bookAppointment/${doctor._id}`)}
+    onClick={() => navigate(`/doctor/bookAppointment/${doctor?._id}`)}
   >
     <div className="card-header">
       Dr. {doctor.firstName} {doctor.lastName}
@@ -30,7 +30,7 @@ const Doctorlist = ({doctor}) => {
       </p>
     </div>
   </div>
-    </Link>
+    {/* </Link> */}
     
     
     

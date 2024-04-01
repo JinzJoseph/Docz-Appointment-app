@@ -4,6 +4,7 @@ import { Col, Form, Input, Row, TimePicker, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { showLoading, hideLoading } from "../redux/alertSlice";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import axios from "axios";
 const ApplyDoctor = () => {
   const [firstName, SetName] = useState("");
@@ -70,7 +71,18 @@ const ApplyDoctor = () => {
       console.log(error);
     }
   };
+  // const timsn00gs:{
+  //   [
+  //     moment(doctor.timings[0], "HH:mm"),
+  //     moment(doctor.timings[1], "HH:mm"),
+  //   ],
 
+  // } 
+  // const timing([
+  //   moment(doctor.SetTiming[0], "HH:mm"),
+  //     moment(doctor.SetTiming[1], "HH:mm"),
+    
+  // ])
   return (
     <Layout>
       <h1 className="text-center">Apply Doctor</h1>
@@ -217,7 +229,7 @@ const ApplyDoctor = () => {
               <TimePicker.RangePicker
                 format="HH:mm"
                 value={timings}
-                onChange={(value) => SetTiming(value)}
+                onChange={(value) => SetTiming(value).format("HH:mm")}
               />
             </Form.Item>
           </Col>

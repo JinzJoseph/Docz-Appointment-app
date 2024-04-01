@@ -88,10 +88,7 @@ const Profile = () => {
           className="m-3"
           initialValues={{
             ...doctor,
-            timings: [
-              moment(doctor.timings[0], "HH:mm"),
-              moment(doctor.timings[1], "HH:mm"),
-            ],
+          
           }}
         >
           <h4 className="">Personal Details : </h4>
